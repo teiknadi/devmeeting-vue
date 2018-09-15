@@ -3,11 +3,23 @@
     <ul>
         <li v-for="(p, key) in products" v-bind:key="key">
             {{ p.name }}
-                <button v-on:click="removeItem(key)">REMOVE</button>
+            <button v-on:click="removeItem(key)">REMOVE</button>
         </li>
     </ul>
-    <input type="text" name="newItem" v-model="newItem" placeholder="Enter a new list postion" />
-    <button v-on:click="addItem(newItem)">ADD</button>
+    <form @submit.prevent="onSubmit()">
+        <input
+            type="text"
+            name="newItem"
+            v-model="newItem"
+            v-validate="'required|min:3'"
+            placeholder="Enter a new list postion"
+        />
+        <button v-on:click="onSubmit">ADD</button>
+
+        <div v-show="errors.has('newItem')">
+            {{ errors.first('newItem') }}
+        </div>
+    </form>
 </div>
 </template>
 
@@ -33,18 +45,22 @@ export default {
     removeLast() {
       this.products.pop();
     },
-    addItem(name) {
-        if (!name) {
-            return;
-        }
-        const id = uuid();
+    onSubmit() {
+        this.$validator.validateAll().then(result => {
+            if (!result) {
+                return;
+            }
 
-        this.products.push({
-            id,
-            name
+            const id = uuid();
+
+            this.products.push({
+                id,
+                name: this.newItem
+            });
+
+            this.newItem = '';
+            this.$validator.reset();
         });
-
-        this.newItem = ''
     },
     removeItem(key) {
       Vue.delete(this.products, key);
@@ -52,3 +68,7 @@ export default {
   },
 };
 </script>
+
+<style>
+ul {list-style: none}
+</style>
