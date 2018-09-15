@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Devmeeting vue</title>
+    </head>
+    <body>
+        <h1>Devmeeting vue</h1>
+
+        <div id="app">
+            <ul>
+                <li v-for="(p, key) in list">
+                    {{ p.name }}
+
+                    <button v-on:click="removeItem(key)">REMOVE</button>
+                </li>
+            </ul>
+
+            <input type="text" name="newItem" v-model="newItem" placeholder="Enter a new list postion" />
+            <button v-on:click="addItem(newItem)">ADD</button>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+        <script>
+            const app = new Vue({
+                el: '#app',
+                data: {
+                    newItem: '',
+                    list: [{
+                        id: 1,
+                        name: 'POS1'
+                    }, {
+                        id: 2,
+                        name: 'POS2'
+                    }]
+                },
+                methods: {
+                    addItem(name) {
+                        if (!name) {
+                            return;
+                        }
+
+                        const id = ++this.list.lenght;
+
+                        this.list.push({
+                            id,
+                            name
+                        });
+
+                        this.newItem = ''
+                    },
+                    removeItem(key) {
+                        Vue.delete(this.list, key);
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
