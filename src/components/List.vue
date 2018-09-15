@@ -2,8 +2,7 @@
 <div>
     <ul>
         <li v-for="(p, key) in products" v-bind:key="key">
-            {{ p.name }}
-            <button v-on:click="removeItem(key)">REMOVE</button>
+            <list-item :itemName="p.name" :itemKey="key"></list-item>
         </li>
     </ul>
     <form @submit.prevent="onSubmit()">
@@ -26,9 +25,13 @@
 <script>
 import Vue from 'vue';
 import uuid from 'uuid/v4';
+import ListItem from './ListItem.vue'
 
 export default {
   name: 'List',
+  components: {
+    ListItem,
+  },
   data() {
     return {
         newItem: '',
@@ -64,11 +67,11 @@ export default {
     },
     removeItem(key) {
       Vue.delete(this.products, key);
-    }
+    },
   },
 };
 </script>
 
 <style>
-ul {list-style: none}
+    ul {list-style: none}
 </style>
